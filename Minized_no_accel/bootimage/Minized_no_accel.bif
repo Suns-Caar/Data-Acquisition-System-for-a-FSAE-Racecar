@@ -1,0 +1,7 @@
+//arch = zynq; split = false; format = MCS
+the_ROM_image:
+{
+	[bootloader]D:\College\Vivado\prjects\ZynqDesign\ZynqDesign.sdk\FSBL\Debug\FSBL.elf
+	D:\College\Vivado\prjects\ZynqDesign\ZynqDesign.sdk\Z_system_wrapper_hw_platform_0\Z_system_wrapper.bit
+	D:\College\Vivado\prjects\ZynqDesign\ZynqDesign.sdk\Minized_no_accel\Debug\Minized_no_accel.elf
+}
