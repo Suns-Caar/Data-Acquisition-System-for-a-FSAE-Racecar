@@ -31,15 +31,7 @@ int commacount;
 int rawvalueRR;
 int rawvalueRL;
 float voltageRR, voltageRL;
-// There is now two versions of the USBSerial class, that are both derived from a common Base class
-// The difference is on how large of transfers that it can handle.  This is controlled by
-// the device descriptor, where up to now we handled those up to 64 byte USB transfers.
-// But there are now new devices that support larger transfer like 512 bytes.  This for example
-// includes the Teensy 4.x boards.  For these we need the big buffer version.
-// uncomment one of the following defines for userial
 USBSerial userial(myusb);  // works only for those Serial devices who transfer <=64 bytes (like T3.x, FTDI...)
-//USBSerial_BigBuffer userial(myusb, 1); // Handles anything up to 512 bytes
-//USBSerial_BigBuffer userial(myusb); // Handles up to 512 but by default only for those > 64 bytes
 USBDriver *drivers[] = {&hub1, &hub2, &hid1, &hid2, &hid3, &userial};
 #define CNT_DEVICES (sizeof(drivers)/sizeof(drivers[0]))
 const char * driver_names[CNT_DEVICES] = {"Hub1", "Hub2",  "HID1", "HID2", "HID3", "USERIAL1" };
@@ -91,14 +83,6 @@ void canSniff(const CAN_message_t &msg) {
 
   File CanFile = SD.open(filename2, FILE_WRITE);
   if (CanFile) {
-//    CanFile.println(Data);
-//    CanFile.print("TS,"); CanFile.print(msg.timestamp);
-//    CanFile.print("ID,"); CanFile.print(msg.id, DEC);
-//    CanFile.print("Buffer,");
-//    for ( uint8_t i = 0; i < msg.len; i++ ) {
-//      CanFile.print(msg.buf[i], DEC); CanFile.print(" ");
-//     
-//    } CanFile.println();
     unsigned int SUS1 = (msg.buf[1] << 8) | msg.buf[0];
     unsigned int SUS2 = (msg.buf[3] << 8) | msg.buf[2];
     float susvoltage1 = (3.3/4096)*SUS1;float susvoltage2 = (3.3/4096)*SUS2;
@@ -107,11 +91,9 @@ void canSniff(const CAN_message_t &msg) {
     
     CanFile.print("SUS1,"); CanFile.print(susvoltage1);CanFile.print(",SUS2,");
     CanFile.print(susvoltage2);CanFile.println();
-//CanFile.println();
    
   } else {
     File CanFile = SD.open(filename, FILE_WRITE);
-
     // if the file didn't open, print an error:
     Serial.println("error opening CanFile.txt");
 
@@ -212,28 +194,28 @@ int parse() {
       //        }
     }
         printBufferToSD(sdbuffer);
-//        Serial.print("Yaw: "); Serial.print(","); Serial.print("Pitch: "); Serial.print(","); Serial.print("Roll: "); Serial.print(","); Serial.print("Ax: ");
-//        Serial.print(",");  Serial.print("Ay: "); Serial.print(","); Serial.println("Az: ");
-//        Serial.print(tokens[1]);
-//        Serial.print(",");
-//        Serial.print(tokens[2]);
-//        Serial.print(",");
-//        Serial.print(tokens[3]);
-//        Serial.print(",");
-//        Serial.print(tokens[10]);
-//        Serial.print(",");
-//        Serial.print(tokens[11]);
-//        Serial.print(",");
-//        //        if(tokens[12] != "") {
-//        //           Serial.print("Az: ");
-//        Serial.println(tokens[12]);
-////            }
-//            Serial.print("Vx: ");
-//            Serial.println(tokens[7]);
-//            Serial.print("Vy: ");
-//            Serial.println(tokens[8]);
-//            Serial.print("vz: ");
-//            Serial.println(tokens[9]);
+       Serial.print("Yaw: "); Serial.print(","); Serial.print("Pitch: "); Serial.print(","); Serial.print("Roll: "); Serial.print(","); Serial.print("Ax: ");
+       Serial.print(",");  Serial.print("Ay: "); Serial.print(","); Serial.println("Az: ");
+       Serial.print(tokens[1]);
+       Serial.print(",");
+       Serial.print(tokens[2]);
+       Serial.print(",");
+       Serial.print(tokens[3]);
+       Serial.print(",");
+       Serial.print(tokens[10]);
+       Serial.print(",");
+       Serial.print(tokens[11]);
+       Serial.print(",");
+       //        if(tokens[12] != "") {
+       //           Serial.print("Az: ");
+       Serial.println(tokens[12]);
+//            }
+           Serial.print("Vx: ");
+           Serial.println(tokens[7]);
+           Serial.print("Vy: ");
+           Serial.println(tokens[8]);
+           Serial.print("vz: ");
+           Serial.println(tokens[9]);
     
 
   }
@@ -265,19 +247,3 @@ void addArrayToBuffer(const char* arrayData) {
     bufferIndex++;
   }
 }
-//void printBufferToSD(String* Data){
-//   File dataFile = SD.open(filename, FILE_WRITE);
-//
-//    if (dataFile) {
-//
-//      dataFile.println(Data,bufferIndex);
-//
-//    } else {
-//      File dataFile = SD.open(filename, FILE_WRITE);
-//
-//      // if the file didn't open, print an error:
-//      Serial.println("error opening vector.csv");
-//
-//    }
-//    dataFile.close();
-//  }
